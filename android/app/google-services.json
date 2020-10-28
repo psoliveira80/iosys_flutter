@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "561385396770",
+    "firebase_url": "https://iosys-7d51a.firebaseio.com",
+    "project_id": "iosys-7d51a",
+    "storage_bucket": "iosys-7d51a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561385396770:android:f37a4bf1e2c29e6d70087b",
+        "android_client_info": {
+          "package_name": "br.mp.mpf.prba.iosys"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561385396770-tn7j6absgn5ed6vud5vnqe9slpb7uqdj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEhhl3j67SZnZwdbBNlVS2J-Y2YJSIZeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561385396770-tn7j6absgn5ed6vud5vnqe9slpb7uqdj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

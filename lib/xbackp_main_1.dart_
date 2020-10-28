@@ -1,0 +1,257 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:background_fetch/background_fetch.dart';
+import 'root_page.dart';
+
+//void main() => runApp(MyApp());
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+
+/// This "Headless Task" is run when app is terminated.
+void backgroundFetchHeadlessTask(String taskId) async {
+
+  print('[BackgroundFetch] Headless event received.--------');
+  await _showNotificationWithoutSound();
+  BackgroundFetch.finish(taskId);
+}
+
+void main() async {
+
+  runApp(MyApp());
+
+  // Register to receive BackgroundFetch events after app is terminated.
+  // Requires {stopOnTerminate: false, enableHeadless: true}
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+
+}
+
+
+class MyApp extends StatefulWidget {
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  bool _enabled = true;
+  int _status = 0;
+  List<DateTime> _events = [];
+
+  @override
+  initState() {
+
+    super.initState();
+
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
+    var initializationSettingsAndroid = new AndroidInitializationSettings('ic_stat_name');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+    //_showNotificationWithoutSound();
+
+    initPlatformState();
+
+
+  }
+
+
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    // Configure BackgroundFetch.
+    BackgroundFetch.configure(BackgroundFetchConfig(
+        minimumFetchInterval: 15,
+        stopOnTerminate: false,
+        enableHeadless: true,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresStorageNotLow: false,
+        requiresDeviceIdle: false,
+        startOnBoot: true,
+        requiredNetworkType: NetworkType.NONE
+    ), (String taskId) async {
+      // This is the fetch-event callback.
+      print("[BackgroundFetch] Event received $taskId");
+      setState(() {
+        _events.insert(0, new DateTime.now());
+      });
+
+      //await _showNotificationWithoutSound();
+
+      // Use a switch statement to route task-handling.
+      switch (taskId) {
+        case 'flutter_background_fetch':
+          print("Received flutter_background_fetch**********");
+          await _showNotificationWithoutSound();
+          break;
+        case 'com.transistorsoft.OOOOOOOOOOOOOOOOOOOOOOOOOO':
+          print("Received custom task -----------------------------------++++++++++++++");
+          await _showNotificationWithoutSound();
+          break;
+        default:
+          print("Default fetch task");
+      }
+
+      // IMPORTANT:  You must signal completion of your task or the OS can punish your app
+      // for taking too long in the background.
+      BackgroundFetch.finish(taskId);
+
+    }).then((int status) {
+      print('[BackgroundFetch] configure success: $status');
+      setState(() {
+        _status = status;
+      });
+    }).catchError((e) {
+      print('[BackgroundFetch] configure ERROR: $e');
+      setState(() {
+        _status = e;
+      });
+    });
+
+    // Optionally query the current BackgroundFetch status.
+    int status = await BackgroundFetch.status;
+    setState(() {
+      _status = status;
+    });
+
+    BackgroundFetch.start();
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+
+    /*
+
+    // Step 1:  Configure BackgroundFetch as usual.
+    BackgroundFetch.configure(BackgroundFetchConfig(
+        minimumFetchInterval: 1,
+        stopOnTerminate: false,
+        enableHeadless: true,
+        startOnBoot: true
+    ), (String taskId) async {
+      // This is the fetch-event callback.
+      setState(() {
+        _events.insert(0, new DateTime.now());
+      });
+      print("[BackgroundFetch] taskId: $taskId");
+
+      // Use a switch statement to route task-handling.
+      switch (taskId) {
+        case 'flutter_background_fetch':
+          print("Received flutter_background_fetch");
+          _showNotificationWithoutSound();
+          break;
+        case 'com.transistorsoft.OOOOOOOOOOOOOOOOOOOOOOOOOO':
+          print("Received custom task");
+          _showNotificationWithoutSound();
+          break;
+        default:
+          print("Default fetch task: $taskId");
+      }
+      // Finish, providing received taskId.
+      BackgroundFetch.finish(taskId);
+    });
+
+
+    // Step 2:  Schedule a custom "oneshot" task "com.transistorsoft.customtask" to execute 5000ms from now.
+    BackgroundFetch.scheduleTask(TaskConfig(
+        taskId: "com.transistorsoft.OOOOOOOOOOOOOOOOOOOOOOOOOO",
+        enableHeadless: true,
+        periodic: true,
+        delay: 5000  // <-- milliseconds
+    ));
+    */
+  }
+
+  /*
+  void _onClickEnable(enabled) {
+    setState(() {
+      _enabled = enabled;
+    });
+    if (enabled) {
+      BackgroundFetch.start().then((int status) {
+        print('[BackgroundFetch] start success: $status');
+      }).catchError((e) {
+        print('[BackgroundFetch] start FAILURE: $e');
+      });
+    } else {
+      BackgroundFetch.stop().then((int status) {
+        print('[BackgroundFetch] stop success: $status');
+      });
+    }
+  }
+
+
+  void _onClickStatus() async {
+    int status = await BackgroundFetch.status;
+    print('[BackgroundFetch] status: $status');
+    setState(() {
+      _status = status;
+    });
+  }
+
+   */
+
+  Future onSelectNotification(String payload) async {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          title: Text("PayLoad"),
+          content: Text("Payload : $payload"),
+        );
+      },
+    );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Iosys',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      //home: RootPage()
+      home: Center(
+        child: Text("teste"),
+      ),
+    );
+  }
+}
+
+Future _showNotificationWithoutSound() async {
+
+  print("entrou <<<<<<<<<<<<<<<<<<<<<<*********"+DateTime.now().toString());
+  var scheduledNotificationDateTime =
+  DateTime.now().add(Duration(minutes: 15));
+
+  var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      'your channel id', 'your channel name', 'your channel description',
+      playSound: false, importance: Importance.Max, priority: Priority.High);
+  var iOSPlatformChannelSpecifics =
+  new IOSNotificationDetails(presentSound: false);
+  var platformChannelSpecifics = new NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    'New Post: '+DateTime.now().toString(),
+    'How to Show Notification in Flutter: '+DateTime.now().toString(),
+    //scheduledNotificationDateTime,
+    //DateTime.now().add(Duration(seconds: 10)),
+    platformChannelSpecifics,
+    //androidAllowWhileIdle:true,
+    payload: 'No_Sound',
+  );
+
+}
