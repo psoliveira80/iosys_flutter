@@ -25,6 +25,12 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   @override
+  void dispose() {
+    print("Disposing Splashscreen");
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
    
     return Stack(
@@ -88,6 +94,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                         onPressed: (){
 
                           widget.auth.cancelaLogin = true;
+                          print('<<< CHAMEI PARA TRUE = '+widget.auth.cancelaLogin.toString());
 
                           setState(() {
                             Navigator.pushReplacement(

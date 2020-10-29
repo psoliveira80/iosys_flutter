@@ -20,6 +20,8 @@ class Auth {
 
   Future _checkConnect() async {
 
+    print('<<< usuario='+this.usuario+' senha='+this.senha+' token='+this.token);
+
     try {
       final response = await http.get(this.endereco).timeout(
           const Duration(seconds: 10));
@@ -64,7 +66,11 @@ class Auth {
 
     Map _mapResponse;
     await _checaStorage();
+    print('<<< 1. CANCELA LOGIN = '+this.cancelaLogin.toString());
+
     if(!this.cancelaLogin) await _gravaStorage();
+    else limpaToken();
+
     var _url = this.endereco+'/_r2_app/auth/executa_login/&app=on&token='+this.token;
 
     Map _params = {
@@ -92,7 +98,10 @@ class Auth {
           this.msgResult = _mapResponse["msg"];
           this.codErro = _mapResponse["cod"];
 
+          print('<<< 2. CANCELA LOGIN = '+this.cancelaLogin.toString());
+
           if(!this.cancelaLogin) await _gravaStorage();
+          else limpaToken();
 
         }
         else {

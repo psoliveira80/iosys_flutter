@@ -205,6 +205,7 @@ class _LoginState extends State<Login> {
     widget.auth.usuario = usuario;
     widget.auth.senha = senha;
 
+    widget.auth.cancelaLogin = false;
 
     await widget.auth.checaToken();
 
