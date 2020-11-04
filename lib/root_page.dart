@@ -6,11 +6,6 @@ import 'webview_page.dart';
 import 'splash_screen.dart';
 import 'auth.dart';
 
-
-
-//teste
-
-
 class RootPage extends StatefulWidget {
 
   String statusText = "Carregando...";

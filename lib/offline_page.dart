@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iosys/root_page.dart';
 import 'login_page.dart';
+import 'auth.dart';
 
 class OfflinePage extends StatefulWidget {
 
@@ -99,7 +100,7 @@ class _OfflinePageState extends State<OfflinePage> {
 
                               setState(() {
                                 Navigator.pushReplacement(
-                                    context, MaterialPageRoute(builder: (context) => Login()));
+                                    context, MaterialPageRoute(builder: (context) => Login(auth: Auth())));
                               });
                             },
                           )

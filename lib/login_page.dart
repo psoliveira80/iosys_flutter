@@ -198,6 +198,7 @@ class _LoginState extends State<Login> {
 
     setState(() {
       _isBtnLoginPressed = true;
+      msgResult = "Conectando...";
     });
 
     //Auth auth = Auth(endereco:endereco, usuario: usuario, senha: senha);
@@ -208,6 +209,10 @@ class _LoginState extends State<Login> {
     widget.auth.cancelaLogin = false;
 
     await widget.auth.checaToken();
+
+    setState(() {
+      msgResult = widget.auth.msgResult;
+    });
 
     if(widget.auth.loginIsValid) {
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'login_page.dart';
 
 class Auth {
 
@@ -23,6 +24,10 @@ class Auth {
     print('<<< usuario='+this.usuario+' senha='+this.senha+' token='+this.token);
 
     try {
+
+      this.msgResult = "Tentando se conectar...";
+      print('testeeeeeeee');
+
       final response = await http.get(this.endereco).timeout(
           const Duration(seconds: 10));
       if (response.statusCode == 200) {
@@ -88,7 +93,17 @@ class Auth {
     await _checkConnect();
     if(this.isConnected == true) {
       try {
-        var response = await http.post(_url, headers: _headers, body: _params);
+        print("tentando conectar");
+        var response = await http.post(_url, headers: _headers, body: _params).timeout(
+          Duration(seconds: 10),
+          onTimeout: () {
+            throw TimeoutException('Tempo de conexão excedido, tente novamente.');
+            return null;
+          },
+        );
+
+        print("passou conexao");
+
         if (response.statusCode == 200) {
 
           _mapResponse = jsonDecode(response.body);
@@ -110,7 +125,7 @@ class Auth {
         }
       }
       catch (e) {
-        this.msgResult = 'Erro: '+e.toString()+'. Procure o administrador.';
+        this.msgResult = 'Erro: '+e.toString()+'.';
       }
     }
     else {
