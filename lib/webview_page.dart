@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:iosys/root_page.dart';
-import 'splash_screen.dart';
 import 'login_page.dart';
 import 'firebase_notification.dart';
 import 'auth.dart';

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'login_page.dart';
 
 class Auth {
 
@@ -29,7 +28,7 @@ class Auth {
       print('testeeeeeeee');
 
       final response = await http.get(this.endereco).timeout(
-          const Duration(seconds: 10));
+          const Duration(seconds: 40));
       if (response.statusCode == 200) {
         isConnected = true;
       }
@@ -95,10 +94,10 @@ class Auth {
       try {
         print("tentando conectar");
         var response = await http.post(_url, headers: _headers, body: _params).timeout(
-          Duration(seconds: 10),
+          Duration(seconds: 40),
           onTimeout: () {
             throw TimeoutException('Tempo de conexão excedido, tente novamente.');
-            return null;
+            //return null;
           },
         );
 
